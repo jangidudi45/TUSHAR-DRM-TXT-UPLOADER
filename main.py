@@ -289,7 +289,7 @@ async def upload(bot: Client, m: Message):
     # Default credit message with link
     credit = "️[Aditya](https://t.me/Itsxadiii)"
     if raw_text3 == '1':
-        CR = '[Aditya]https://t.me/Itsxadiii5)'
+        CR = '[Aditya](https://t.me/Itsxadiii)'
     elif raw_text3:
         try:
             text, link = raw_text3.split(',')
