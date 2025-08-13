@@ -24,6 +24,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 from base64 import b64decode
+from typing import Optional # Added for type hinting message_thread_id
 
 # Same AES Key aur IV jo encryption ke liye use kiya tha
 KEY = b'^#^#&@*HDU@&@*()'   
@@ -379,7 +380,7 @@ def get_next_emoji():
     return emoji
 
 
-async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog):   
+async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog, message_thread_id: Optional[int] = None):   
        
     emoji = get_next_emoji()
     subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:02 -vframes 1 "{filename}.jpg"', shell=True)   
@@ -399,9 +400,9 @@ async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog):
     start_time = time.time()   
    
     try:   
-        await m.reply_video(filename,caption=cc, supports_streaming=True,height=720,width=1280,thumb=thumbnail,duration=dur, progress=progress_bar,progress_args=(reply,start_time))   
+        await m.reply_video(filename,caption=cc, supports_streaming=True,height=720,width=1280,thumb=thumbnail,duration=dur, progress=progress_bar,progress_args=(reply,start_time), message_thread_id=message_thread_id)   
     except Exception:   
-        await m.reply_document(filename,caption=cc, progress=progress_bar,progress_args=(reply,start_time))   
+        await m.reply_document(filename,caption=cc, progress=progress_bar,progress_args=(reply,start_time), message_thread_id=message_thread_id)   
     os.remove(filename)   
    
     os.remove(f"{filename}.jpg")
@@ -413,7 +414,7 @@ async def watermark_pdf(file_path, watermark_text):
     def create_watermark(text):
         """Create a PDF watermark using ReportLab."""
         packet = BytesIO()
-        can = canvas.Canvas(packet, pagesize=letter)
+        can = canvas.Canvas(packet, pagesizes=letter)
 
         # Page dimensions
         width, height = letter
@@ -460,5 +461,3 @@ async def watermark_pdf(file_path, watermark_text):
     os.remove(file_path)
 
     return new_file_path
-       
-   
